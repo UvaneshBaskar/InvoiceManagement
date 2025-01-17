@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Section</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Create Invoice</h1>
+    <form id="invoice-form">
+        <div>
+            <label for="customerDropdown">Select Customer:</label>
+            <select id="customerDropdown" name="customer" required>
+                <option value="">Select a Customer</option>
+                <!-- Options will be dynamically populated -->
+            </select>
+        </div>
+
+        <div>
+            <label for="customerName">Customer Name:</label>
+            <input id="customerName" type="text" name="customerName" readonly />
+        </div>
+
+        <div>
+            <label for="customerAddress">Customer Address:</label>
+            <input id="customerAddress" type="text" name="customerAddress" readonly />
+        </div>
+
+        <div>
+            <label for="customerGstin">Customer GSTIN:</label>
+            <input id="customerGstin" type="text" name="customerGstin" readonly />
+        </div>
+
+        <div>
+            <label for="customerState">Customer State:</label>
+            <input id="customerState" type="text" name="customerState" readonly />
+        </div>
+
+        <table id="productTable">
+            <thead>
+            <tr>
+                <th>Product Code</th>
+                <th>HSN Code</th>
+                <th>UOM</th>
+                <th>Quantity</th>
+                <th>Rate</th>
+                <th>Amount</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="productTableBody">
+            <!-- Product rows will be dynamically added here -->
+            </tbody>
+        </table>
+        <button type="button" id="addProductRowButton">Add Product Row</button>
+
+        <div>
+            <label for="totalAmount">Total Amount:</label>
+            <input id="totalAmount" type="text" name="totalAmount" readonly />
+        </div>
+
+        <div>
+            <label for="amountInWords">Amount in Words:</label>
+            <input id="amountInWords" type="text" name="amountInWords" readonly />
+        </div>
+
+        <button type="submit">Submit Invoice</button>
+    </form>
+</div>
+
+<script src="invoice.js"></script>
+</body>
+</html>
