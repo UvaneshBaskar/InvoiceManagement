@@ -10,6 +10,7 @@
 <div class="container">
     <h1>Create Invoice</h1>
     <form id="invoice-form">
+        <!-- Customer Selection -->
         <div>
             <label for="customerDropdown">Select Customer:</label>
             <select id="customerDropdown" name="customer" required>
@@ -18,6 +19,7 @@
             </select>
         </div>
 
+        <!-- Customer Details -->
         <div>
             <label for="customerName">Customer Name:</label>
             <input id="customerName" type="text" name="customerName" readonly />
@@ -38,6 +40,23 @@
             <input id="customerState" type="text" name="customerState" readonly />
         </div>
 
+        <!-- Invoice Details -->
+        <div>
+            <label for="invoiceNumber">Invoice Number:</label>
+            <input id="invoiceNumber" type="text" name="invoiceNumber" required />
+        </div>
+
+        <div>
+            <label for="invoiceDate">Invoice Date:</label>
+            <input id="invoiceDate" type="date" name="invoiceDate" required />
+        </div>
+
+        <div>
+            <label for="purchaseOrderNumber">Purchase Order Number:</label>
+            <input id="purchaseOrderNumber" type="text" name="purchaseOrderNumber" />
+        </div>
+
+        <!-- Product Table -->
         <table id="productTable">
             <thead>
             <tr>
@@ -56,9 +75,25 @@
         </table>
         <button type="button" id="addProductRowButton">Add Product Row</button>
 
+        <!-- Total and Tax Details -->
         <div>
             <label for="totalAmount">Total Amount:</label>
             <input id="totalAmount" type="text" name="totalAmount" readonly />
+        </div>
+
+        <div>
+            <label for="cgst">CGST (9%):</label>
+            <input id="cgst" type="text" name="cgst" readonly />
+        </div>
+
+        <div>
+            <label for="sgst">SGST (9%):</label>
+            <input id="sgst" type="text" name="sgst" readonly />
+        </div>
+
+        <div>
+            <label for="totalAmountAfterTax">Total Amount After Tax:</label>
+            <input id="totalAmountAfterTax" type="text" name="totalAmountAfterTax" readonly />
         </div>
 
         <div>
@@ -66,9 +101,17 @@
             <input id="amountInWords" type="text" name="amountInWords" readonly />
         </div>
 
+        <!-- Submit Button -->
         <button type="submit">Submit Invoice</button>
     </form>
 </div>
+
+<script>
+    // Autofill the current date for the invoice date field
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("invoiceDate").value = new Date().toISOString().split("T")[0];
+    });
+</script>
 
 <script src="invoice.js"></script>
 </body>

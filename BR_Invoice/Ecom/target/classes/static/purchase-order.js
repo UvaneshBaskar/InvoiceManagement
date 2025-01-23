@@ -3,12 +3,11 @@ let customerDetails = [];
 
 // Fetch customer details and populate the dropdown
 function fetchCustomerDetails() {
-    fetch('/api/customer-details') // Adjust the endpoint if necessary
+    fetch('/api/customer-details')
         .then(response => response.json())
         .then(data => {
             customerDetails = data;
             populateCustomerDropdown();
-            console.log('API Response:', data);
         })
         .catch(error => console.error('Error fetching customer details:', error));
 }
@@ -20,8 +19,8 @@ function populateCustomerDropdown() {
 
     customerDetails.forEach(customer => {
         const option = document.createElement('option');
-        option.value = customer.id; // Assuming the customer object has an "id" property
-        option.textContent = customer.displayName; // Updated to use "displayName" property
+        option.value = customer.id;
+        option.textContent = customer.displayName;
         customerDropdown.appendChild(option);
     });
 }
@@ -38,10 +37,10 @@ function autofillCustomerDetails() {
     const selectedCustomer = customerDetails.find(customer => customer.id == selectedCustomerId);
 
     if (selectedCustomer) {
-        document.getElementById('customerName').value = selectedCustomer.companyName || ''; // Updated to use "companyName"
-        document.getElementById('customerAddress').value = selectedCustomer.billingAddress || ''; // Updated to use "billingAddress"
-        document.getElementById('customerGstin').value = selectedCustomer.gstNumber || ''; // Updated to use "gstNumber"
-        document.getElementById('customerState').value = selectedCustomer.stateCode || ''; // Updated to use "stateCode"
+        document.getElementById('customerName').value = selectedCustomer.companyName || '';
+        document.getElementById('customerAddress').value = selectedCustomer.billingAddress || '';
+        document.getElementById('customerGstin').value = selectedCustomer.gstNumber || '';
+        document.getElementById('customerState').value = selectedCustomer.stateCode || '';
     }
 }
 
@@ -64,7 +63,9 @@ function addProductRow() {
         <td><input type="text" name="uom[]" placeholder="UOM" required /></td>
         <td><input type="number" name="quantity[]" placeholder="Quantity" required /></td>
         <td><input type="number" name="rate[]" placeholder="Rate" required /></td>
-        <td><input type="number" name="amount[]" placeholder="Amount" readonly /></td>
+        <td><input type="text" name="cgst[]" readonly /></td>
+        <td><input type="text" name="sgst[]" readonly /></td>
+        <td><input type="text" name="amount[]" readonly /></td>
         <td><button type="button" onclick="removeProductRow(this)">Remove</button></td>
     `;
 
@@ -75,7 +76,7 @@ function addProductRow() {
 function removeProductRow(button) {
     const row = button.parentElement.parentElement;
     row.remove();
-    calculateTotalAmount(); // Recalculate total when a row is removed
+    calculateTotalAmount();
 }
 
 // Calculate and update the total amount
@@ -83,32 +84,40 @@ function calculateTotalAmount() {
     const quantityInputs = document.getElementsByName('quantity[]');
     const rateInputs = document.getElementsByName('rate[]');
     const amountInputs = document.getElementsByName('amount[]');
+    const cgstInputs = document.getElementsByName('cgst[]');
+    const sgstInputs = document.getElementsByName('sgst[]');
 
     let total = 0;
+    let totalCgst = 0;
+    let totalSgst = 0;
 
     for (let i = 0; i < quantityInputs.length; i++) {
         const quantity = parseFloat(quantityInputs[i].value) || 0;
         const rate = parseFloat(rateInputs[i].value) || 0;
         const amount = quantity * rate;
+        const cgst = amount * 0.09; // CGST is 9%
+        const sgst = amount * 0.09; // SGST is 9%
 
         amountInputs[i].value = amount.toFixed(2);
+        cgstInputs[i].value = cgst.toFixed(2);
+        sgstInputs[i].value = sgst.toFixed(2);
+
         total += amount;
+        totalCgst += cgst;
+        totalSgst += sgst;
     }
 
-    const cgst = total * 0.09; // Example: 9% CGST
-    const sgst = total * 0.09; // Example: 9% SGST
-    const totalAfterTax = total + cgst + sgst; // Total after including taxes
+    const totalAfterTax = total + totalCgst + totalSgst;
 
     document.getElementById('totalAmount').value = total.toFixed(2);
-    document.getElementById('cgst').value = cgst.toFixed(2);
-    document.getElementById('sgst').value = sgst.toFixed(2);
-    document.getElementById('totalAmountAfterTax').value = totalAfterTax.toFixed(2); // Updated field
-    document.getElementById('amountInWords').value = convertNumberToWords(totalAfterTax); // Updated to use totalAfterTax
+    document.getElementById('cgst').value = totalCgst.toFixed(2);
+    document.getElementById('sgst').value = totalSgst.toFixed(2);
+    document.getElementById('totalAmountAfterTax').value = totalAfterTax.toFixed(2);
+    document.getElementById('amountInWords').value = convertNumberToWords(totalAfterTax);
 }
 
 // Convert a number to words (basic implementation)
 function convertNumberToWords(number) {
-    // Implement a number-to-words converter here or use a library
     return `${number} Only`; // Placeholder implementation
 }
 
@@ -118,13 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('customerDropdown').addEventListener('change', autofillCustomerDetails);
     document.getElementById('productTable').addEventListener('input', calculateTotalAmount);
-
     document.getElementById('addProductRowButton').addEventListener('click', addProductRow);
+
     const invoiceDateInput = document.getElementById("invoiceDate");
     invoiceDateInput.value = new Date().toISOString().split("T")[0];
 });
 
-document.getElementById("invoice-form").addEventListener("submit", function (e) {
+document.getElementById("purchase-order-form").addEventListener("submit", function (e) {
     e.preventDefault();
 
     const customerId = document.getElementById("customerDropdown").value;
@@ -138,20 +147,19 @@ document.getElementById("invoice-form").addEventListener("submit", function (e) 
         totalAmount: parseFloat(document.getElementById("totalAmount").value) || 0,
         cgst: parseFloat(document.getElementById("cgst").value) || 0,
         sgst: parseFloat(document.getElementById("sgst").value) || 0,
-        totalAmountAfterTax: parseFloat(document.getElementById("totalAmountAfterTax").value) || 0, // Added field
+        totalAmountAfterTax: parseFloat(document.getElementById("totalAmountAfterTax").value) || 0,
         products: [...document.querySelectorAll("#productTableBody tr")].map(row => ({
             productCode: row.querySelector("input[name='productCode[]']").value,
             hsnCode: row.querySelector("input[name='hsnCode[]']").value,
             uom: row.querySelector("input[name='uom[]']").value,
             quantity: parseFloat(row.querySelector("input[name='quantity[]']").value) || 0,
-            rate: parseFloat(row.querySelector("input[name='rate[]']").value) || 0
+            rate: parseFloat(row.querySelector("input[name='rate[]']").value) || 0,
+            cgst: parseFloat(row.querySelector("input[name='cgst[]']").value) || 0,
+            sgst: parseFloat(row.querySelector("input[name='sgst[]']").value) || 0,
         }))
     };
 
-    console.log("Invoice Data to be Sent:", invoiceData);
-    console.log("Payload sent to backend:", JSON.stringify(invoiceData, null, 2));
-
-    fetch(`/api/invoices/${customerId}`, {
+    fetch(`/api/purchase-order/${customerId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(invoiceData)

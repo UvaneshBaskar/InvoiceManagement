@@ -5,15 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "invoice")
+@Table(name = "purchaseOrder")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InvoiceModel {
+public class PurchaseOrderModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,11 +23,11 @@ public class InvoiceModel {
     @JoinColumn(name = "customer_id", nullable = false)
     private CustomerDetails customer;
 
-    private String purchaseOrderNumber;
+    //private String purchaseOrderNumber;
 
 
-    private String invoiceNumber;
-    private LocalDate invoiceDate;
+    //private String invoiceNumber;
+    //private LocalDate invoiceDate;
 
 //    private String productCode; // Multiple entries, delimited by "##"
 //    private String hsnCode; // Multiple entries, delimited by "##"
@@ -35,16 +36,31 @@ public class InvoiceModel {
 //    private String rate; // Multiple entries, delimited by "##"
 //    private String amount; // Multiple entries, delimited by "##"
 
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductForInvoice> products; // Replacing delimited fields with a proper relationship
+    private String vendorCode;
+    private String customerName;
+    private String customerAddress;
+    private String gstNumber;
+
+    private BigDecimal netValue;
+    private BigDecimal taxValue;
+    private BigDecimal grossValue;
+    private String totalInWords;
 
 
-    private double cgst;
-    private double sgst;
-    private double totalAmount;
-    private String amountInWords;
 
-    private  double totalAmountAfterTax;
+
+
+
+    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductForPurchaseOrder> products; // Replacing delimited fields with a proper relationship
+
+
+//    private double cgst;
+//    private double sgst;
+//    private double totalAmount;
+//    private String amountInWords;
+//
+//    private  double totalAmountAfterTax;
 
     // Getters and setters
 }

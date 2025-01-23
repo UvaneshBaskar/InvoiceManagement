@@ -75,6 +75,7 @@ function addProductRow() {
 function removeProductRow(button) {
     const row = button.parentElement.parentElement;
     row.remove();
+    calculateTotalAmount(); // Recalculate total when a row is removed
 }
 
 // Calculate and update the total amount
@@ -94,8 +95,15 @@ function calculateTotalAmount() {
         total += amount;
     }
 
+    const cgst = total * 0.09; // Example: 9% CGST
+    const sgst = total * 0.09; // Example: 9% SGST
+    const totalAfterTax = total + cgst + sgst; // Total after including taxes
+
     document.getElementById('totalAmount').value = total.toFixed(2);
-    document.getElementById('amountInWords').value = convertNumberToWords(total);
+    document.getElementById('cgst').value = cgst.toFixed(2);
+    document.getElementById('sgst').value = sgst.toFixed(2);
+    document.getElementById('totalAmountAfterTax').value = totalAfterTax.toFixed(2); // Updated field
+    document.getElementById('amountInWords').value = convertNumberToWords(totalAfterTax); // Updated to use totalAfterTax
 }
 
 // Convert a number to words (basic implementation)
@@ -112,4 +120,48 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('productTable').addEventListener('input', calculateTotalAmount);
 
     document.getElementById('addProductRowButton').addEventListener('click', addProductRow);
+    const invoiceDateInput = document.getElementById("invoiceDate");
+    invoiceDateInput.value = new Date().toISOString().split("T")[0];
+});
+
+document.getElementById("invoice-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const customerId = document.getElementById("customerDropdown").value;
+    const invoiceData = {
+        invoiceNumber: document.getElementById("invoiceNumber").value,
+        invoiceDate: document.getElementById("invoiceDate").value,
+        purchaseOrderNumber: document.getElementById("purchaseOrderNumber").value || null,
+        customerName: document.getElementById("customerName").value,
+        customerAddress: document.getElementById("customerAddress").value,
+        customerGstin: document.getElementById("customerGstin").value,
+        totalAmount: parseFloat(document.getElementById("totalAmount").value) || 0,
+        cgst: parseFloat(document.getElementById("cgst").value) || 0,
+        sgst: parseFloat(document.getElementById("sgst").value) || 0,
+        totalAmountAfterTax: parseFloat(document.getElementById("totalAmountAfterTax").value) || 0, // Added field
+        products: [...document.querySelectorAll("#productTableBody tr")].map(row => ({
+            productCode: row.querySelector("input[name='productCode[]']").value,
+            hsnCode: row.querySelector("input[name='hsnCode[]']").value,
+            uom: row.querySelector("input[name='uom[]']").value,
+            quantity: parseFloat(row.querySelector("input[name='quantity[]']").value) || 0,
+            rate: parseFloat(row.querySelector("input[name='rate[]']").value) || 0
+        }))
+    };
+
+    console.log("Invoice Data to be Sent:", invoiceData);
+    console.log("Payload sent to backend:", JSON.stringify(invoiceData, null, 2));
+
+    fetch(`/api/invoices/${customerId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(invoiceData)
+    })
+    .then(response => {
+        if (response.ok) {
+            alert("Invoice saved successfully!");
+        } else {
+            alert("Failed to save invoice.");
+        }
+    })
+    .catch(error => console.error("Error saving invoice:", error));
 });

@@ -1,30 +1,30 @@
 package com.uvaneshBaskar.Ecom.Controller;
 
 import com.uvaneshBaskar.Ecom.Model.CustomerDetails;
-import com.uvaneshBaskar.Ecom.Model.InvoiceModel;
+import com.uvaneshBaskar.Ecom.Model.PurchaseOrderModel;
 import com.uvaneshBaskar.Ecom.Service.CustomerDetailsService;
-import com.uvaneshBaskar.Ecom.Service.InvoiceService;
+import com.uvaneshBaskar.Ecom.Service.PurchaseOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/invoices")
-public class InvoiceController {
+@RequestMapping("/api/purchase-order")
+public class PurchaseOrderController {
     @Autowired
-    private InvoiceService service;
+    private PurchaseOrderService service;
 
     @Autowired
     private CustomerDetailsService customerDetailService;
 
     @GetMapping
-    public List<InvoiceModel> getAllInvoices() {
+    public List<PurchaseOrderModel> getAllInvoices() {
         return service.getAllInvoices();
     }
 
     @PostMapping("/{customerId}")
-    public InvoiceModel createInvoice(@PathVariable Long customerId, @RequestBody InvoiceModel invoice) {
+    public PurchaseOrderModel createInvoice(@PathVariable Long customerId, @RequestBody PurchaseOrderModel invoice) {
         System.out.println("Invoice Received: " + invoice);
         return service.createInvoice(customerId, invoice);
     }
