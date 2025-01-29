@@ -193,6 +193,35 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+function fetchAndDisplayPurchaseOrders() {
+    fetch("/api/purchase-order")
+        .then(response => response.json())
+        .then(data => {
+            const purchaseOrderTable = document.getElementById("purchaseOrderTable");
+            purchaseOrderTable.innerHTML = ""; // Clear previous content
+
+            if (data.length === 0) {
+                purchaseOrderTable.innerHTML = "<tr><td colspan='6'>No purchase orders available</td></tr>";
+                return;
+            }
+
+            data.forEach(order => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${order.id}</td>
+                    <td>${order.vendorCode || "N/A"}</td>
+                    <td>${order.customerName}</td>
+                    <td>${order.netValue}</td>
+                    <td>${order.taxValue}</td>
+                    <td>${order.grossValue}</td>
+                `;
+                purchaseOrderTable.appendChild(row);
+            });
+        })
+        .catch(error => console.error("Error fetching purchase orders:", error));
+}
+
+document.addEventListener("DOMContentLoaded", fetchAndDisplayPurchaseOrders);
 
 
 
