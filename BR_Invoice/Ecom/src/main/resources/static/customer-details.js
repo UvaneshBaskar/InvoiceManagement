@@ -35,6 +35,7 @@ async function fetchCustomerDetails() {
                 <td>${customerDetail.shippingAddress}</td>
                 <td>${customerDetail.stateCode}</td>
                 <td>${customerDetail.vendorCode}</td>
+                <td>${customerDetail.status}</td>
 
             </tr>`;
             tableBody.innerHTML += row;

@@ -25,7 +25,7 @@ public class PurchaseOrderController {
 
     @PostMapping("/{customerId}")
     public PurchaseOrderModel createInvoice(@PathVariable Long customerId, @RequestBody PurchaseOrderModel invoice) {
-        System.out.println("Invoice Received: " + invoice);
+        //System.out.println("Invoice Received: " + invoice);
         return service.createInvoice(customerId, invoice);
     }
 

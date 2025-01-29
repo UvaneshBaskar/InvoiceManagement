@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerDetails {
-//client_id,company_name,display_name,email_id,contact number, vendor code, bank name,account no,ifsc code
+    //client_id,company_name,display_name,email_id,contact number, vendor code, bank name,account no,ifsc code
 // ,branch,state code
 //gstNo,Billing address, Shipping Address
     @Id
@@ -63,5 +63,9 @@ public class CustomerDetails {
     @NotBlank(message = "Shipping address is required")
     @Lob
     private String shippingAddress;
+
+    @NotBlank(message = "Status is required")
+    private String status;
+
 }
 

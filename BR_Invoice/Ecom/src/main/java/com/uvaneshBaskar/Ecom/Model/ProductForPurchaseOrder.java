@@ -1,5 +1,6 @@
 package com.uvaneshBaskar.Ecom.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class ProductForPurchaseOrder {
     private Long id;
 
     private String productCode;
+    private String description;
     private String hsnCode;
     private String uom; // Unit of Measurement
     private int quantity;
@@ -30,5 +32,6 @@ public class ProductForPurchaseOrder {
 
     @ManyToOne
     @JoinColumn(name = "purchase_order", nullable = false)
+    @JsonBackReference // Prevents infinite recursion
     private PurchaseOrderModel purchaseOrder;
 }

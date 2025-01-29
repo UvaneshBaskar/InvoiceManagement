@@ -1,6 +1,7 @@
 package com.uvaneshBaskar.Ecom.Controller;
 
 import com.uvaneshBaskar.Ecom.Model.CustomerDetails;
+import com.uvaneshBaskar.Ecom.Repository.InvoiceRepo;
 import com.uvaneshBaskar.Ecom.Service.CustomerDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,27 +19,37 @@ public class CustomerDetailsController {
     @Autowired
     private CustomerDetailsService customerDetailsService;
 
-//    private final InvoiceRepo repo;
+    //private final InvoiceRepo repo;
 //
 //    public InvoiceController(InvoiceRepo repo) {
 //        this.repo = repo;
 //    }
 //    @PostMapping
-//    public ResponseEntity<List<Invoice>> saveInvoices(@RequestBody List<Invoice> invoices) {
-//        List<Invoice> savedInvoices = repo.saveAll(invoices);
+//    public ResponseEntity<List<InvoiceRepo>> saveInvoices(@RequestBody List<InvoiceRepo> invoices) {
+//        List<InvoiceRepo> savedInvoices = repo.saveAll(invoices);
 //        return ResponseEntity.status(HttpStatus.CREATED).body(savedInvoices);
 //    }
 
     @PostMapping
-    public ResponseEntity<CustomerDetails> createInvoice(@RequestBody CustomerDetails customerDetails) {
+    public ResponseEntity<?> createInvoice(@RequestBody CustomerDetails customerDetails) {
         try {
             CustomerDetails savedCustomerDetails = customerDetailsService.saveCustomerDetails(customerDetails);
             return ResponseEntity.ok(savedCustomerDetails);
         } catch (Exception e) {
-            return (ResponseEntity<CustomerDetails>) ResponseEntity.status(HttpStatus.BAD_REQUEST);
-            //// ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+//    @PostMapping
+//    public ResponseEntity<CustomerDetails> createInvoice(@RequestBody CustomerDetails customerDetails) {
+//        try {
+//            CustomerDetails savedCustomerDetails = customerDetailsService.saveCustomerDetails(customerDetails);
+//            return ResponseEntity.ok(savedCustomerDetails);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Set the body explicitly (optional)
+//        }
+//    }
+
 
 
 

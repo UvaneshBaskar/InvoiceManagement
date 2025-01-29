@@ -18,10 +18,14 @@ document.getElementById('new-customer-details-form').addEventListener('submit', 
         shippingAddress: document.getElementById('shippingAddress').value,
         stateCode: document.getElementById('stateCode').value,
         vendorCode: document.getElementById('vendorCode').value,
+        status: document.getElementById('status').value,
+
+
     };
 
     try {
         // Send a POST request to the backend
+        //console.log("uvanesh:::"+formData);
         const response = await fetch('http://localhost:8080/api/customer-details', {
             method: 'POST',
             headers: {

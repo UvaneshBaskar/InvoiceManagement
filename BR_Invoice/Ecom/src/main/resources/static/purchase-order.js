@@ -1,175 +1,238 @@
-// Define a global variable to hold customer details
-let customerDetails = [];
-
-// Fetch customer details and populate the dropdown
-function fetchCustomerDetails() {
-    fetch('/api/customer-details')
-        .then(response => response.json())
-        .then(data => {
-            customerDetails = data;
-            populateCustomerDropdown();
-        })
-        .catch(error => console.error('Error fetching customer details:', error));
+// Make removeProductRow globally accessible
+function removeProductRow(button) {
+    const row = button.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+    calculateTotalAmount();
 }
 
-// Populate the customer dropdown with the fetched data
-function populateCustomerDropdown() {
-    const customerDropdown = document.getElementById('customerDropdown');
-    customerDropdown.innerHTML = '<option value="">Select a customer</option>';
+// Function to calculate CGST, SGST, and Amount
+function calculateRowAmount(row) {
+    const quantityInput = row.querySelector('.quantity');
+    const rateInput = row.querySelector('.rate');
+    const cgstInput = row.querySelector('.cgst');
+    const sgstInput = row.querySelector('.sgst');
+    const amountInput = row.querySelector('.amount');
 
-    customerDetails.forEach(customer => {
-        const option = document.createElement('option');
-        option.value = customer.id;
-        option.textContent = customer.displayName;
-        customerDropdown.appendChild(option);
-    });
-}
+    const quantity = parseFloat(quantityInput.value) || 0;
+    const rate = parseFloat(rateInput.value) || 0;
 
-// Autofill the form when a customer is selected
-function autofillCustomerDetails() {
-    const selectedCustomerId = document.getElementById('customerDropdown').value;
+    if (quantity > 0 && rate > 0) {
+        const total = quantity * rate;
+        const cgst = total * 0.09; // 9% CGST
+        const sgst = total * 0.09; // 9% SGST
+        const amount = total + cgst + sgst;
 
-    if (!selectedCustomerId) {
-        clearCustomerDetails();
-        return;
+        cgstInput.value = cgst.toFixed(2);
+        sgstInput.value = sgst.toFixed(2);
+        amountInput.value = amount.toFixed(2);
+    } else {
+        cgstInput.value = "";
+        sgstInput.value = "";
+        amountInput.value = "";
     }
 
-    const selectedCustomer = customerDetails.find(customer => customer.id == selectedCustomerId);
+    calculateTotalAmount();
+}
 
-    if (selectedCustomer) {
+// Function to calculate total invoice amounts
+function calculateTotalAmount() {
+    let netValue = 0, netTotalTax = 0, totalAmount = 0;
+
+    document.querySelectorAll("#productTableBody tr").forEach(row => {
+        const amount = parseFloat(row.querySelector('.amount')?.value) || 0;
+        const cgst = parseFloat(row.querySelector('.cgst')?.value) || 0;
+        const sgst = parseFloat(row.querySelector('.sgst')?.value) || 0;
+
+        netValue += (amount - cgst - sgst);
+        netTotalTax += (cgst + sgst);
+        totalAmount += amount;
+    });
+
+    document.getElementById('netValue').value = netValue.toFixed(2);
+    document.getElementById('netTotalTax').value = netTotalTax.toFixed(2);
+    document.getElementById('totalAmount').value = totalAmount.toFixed(2);
+    document.getElementById('amountInWords').value = numberToWords(totalAmount);
+
+}
+
+// Function to add a new product row
+function addProductRow() {
+    const productTableBody = document.getElementById('productTableBody');
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td><input type="text" required></td>
+        <td><input type="text" required></td>
+        <td><input type="text" required></td>
+        <td><input type="text" required></td>
+        <td><input type="number" class="quantity" required></td>
+        <td><input type="number" class="rate" required></td>
+        <td><input type="text" class="cgst" readonly></td>
+        <td><input type="text" class="sgst" readonly></td>
+        <td><input type="text" class="amount" readonly></td>
+        <td><button type="button" class="remove-btn">Remove</button></td>
+    `;
+    productTableBody.appendChild(newRow);
+
+    // Add event listeners to newly created Quantity & Rate fields
+    newRow.querySelector('.quantity').addEventListener('input', () => calculateRowAmount(newRow));
+    newRow.querySelector('.rate').addEventListener('input', () => calculateRowAmount(newRow));
+}
+
+// Event listener for dynamically added Remove buttons
+document.addEventListener("click", function(event) {
+    if (event.target && event.target.classList.contains("remove-btn")) {
+        removeProductRow(event.target);
+    }
+});
+
+// Event Listeners on DOM Load
+document.addEventListener('DOMContentLoaded', function () {
+    let customerDetails = [];
+
+    function fetchCustomerDetails() {
+        fetch('/api/customer-details')
+            .then(response => response.json())
+            .then(data => {
+                customerDetails = data;
+                populateCustomerDropdown();
+            })
+            .catch(error => console.error('Error fetching customer details:', error));
+    }
+
+    function populateCustomerDropdown() {
+        const customerDropdown = document.getElementById('customerDropdown');
+        customerDropdown.innerHTML = '<option value="">Select a customer</option>';
+
+        customerDetails.forEach(customer => {
+            const option = document.createElement('option');
+            option.value = customer.id;
+            option.textContent = customer.displayName;
+            customerDropdown.appendChild(option);
+        });
+    }
+
+    function autofillCustomerDetails() {
+        const selectedCustomerId = document.getElementById('customerDropdown').value;
+        if (!selectedCustomerId) return;
+
+        const selectedCustomer = customerDetails.find(customer => customer.id == selectedCustomerId);
         document.getElementById('customerName').value = selectedCustomer.companyName || '';
         document.getElementById('customerAddress').value = selectedCustomer.billingAddress || '';
         document.getElementById('customerGstin').value = selectedCustomer.gstNumber || '';
         document.getElementById('customerState').value = selectedCustomer.stateCode || '';
-    }
-}
-
-// Clear customer-related fields when no customer is selected
-function clearCustomerDetails() {
-    document.getElementById('customerName').value = '';
-    document.getElementById('customerAddress').value = '';
-    document.getElementById('customerGstin').value = '';
-    document.getElementById('customerState').value = '';
-}
-
-// Add more product rows to the form
-function addProductRow() {
-    const productTableBody = document.getElementById('productTableBody');
-    const newRow = document.createElement('tr');
-
-    newRow.innerHTML = `
-        <td><input type="text" name="productCode[]" placeholder="Product Code" required /></td>
-        <td><input type="text" name="hsnCode[]" placeholder="HSN Code" required /></td>
-        <td><input type="text" name="uom[]" placeholder="UOM" required /></td>
-        <td><input type="number" name="quantity[]" placeholder="Quantity" required /></td>
-        <td><input type="number" name="rate[]" placeholder="Rate" required /></td>
-        <td><input type="text" name="cgst[]" readonly /></td>
-        <td><input type="text" name="sgst[]" readonly /></td>
-        <td><input type="text" name="amount[]" readonly /></td>
-        <td><button type="button" onclick="removeProductRow(this)">Remove</button></td>
-    `;
-
-    productTableBody.appendChild(newRow);
-}
-
-// Remove a product row from the form
-function removeProductRow(button) {
-    const row = button.parentElement.parentElement;
-    row.remove();
-    calculateTotalAmount();
-}
-
-// Calculate and update the total amount
-function calculateTotalAmount() {
-    const quantityInputs = document.getElementsByName('quantity[]');
-    const rateInputs = document.getElementsByName('rate[]');
-    const amountInputs = document.getElementsByName('amount[]');
-    const cgstInputs = document.getElementsByName('cgst[]');
-    const sgstInputs = document.getElementsByName('sgst[]');
-
-    let total = 0;
-    let totalCgst = 0;
-    let totalSgst = 0;
-
-    for (let i = 0; i < quantityInputs.length; i++) {
-        const quantity = parseFloat(quantityInputs[i].value) || 0;
-        const rate = parseFloat(rateInputs[i].value) || 0;
-        const amount = quantity * rate;
-        const cgst = amount * 0.09; // CGST is 9%
-        const sgst = amount * 0.09; // SGST is 9%
-
-        amountInputs[i].value = amount.toFixed(2);
-        cgstInputs[i].value = cgst.toFixed(2);
-        sgstInputs[i].value = sgst.toFixed(2);
-
-        total += amount;
-        totalCgst += cgst;
-        totalSgst += sgst;
+        document.getElementById('vendorCode').value = selectedCustomer.vendorCode || '';
     }
 
-    const totalAfterTax = total + totalCgst + totalSgst;
-
-    document.getElementById('totalAmount').value = total.toFixed(2);
-    document.getElementById('cgst').value = totalCgst.toFixed(2);
-    document.getElementById('sgst').value = totalSgst.toFixed(2);
-    document.getElementById('totalAmountAfterTax').value = totalAfterTax.toFixed(2);
-    document.getElementById('amountInWords').value = convertNumberToWords(totalAfterTax);
-}
-
-// Convert a number to words (basic implementation)
-function convertNumberToWords(number) {
-    return `${number} Only`; // Placeholder implementation
-}
-
-// Initialize the script
-document.addEventListener('DOMContentLoaded', () => {
-    fetchCustomerDetails();
-
+    // Add event listeners
     document.getElementById('customerDropdown').addEventListener('change', autofillCustomerDetails);
-    document.getElementById('productTable').addEventListener('input', calculateTotalAmount);
     document.getElementById('addProductRowButton').addEventListener('click', addProductRow);
 
-    const invoiceDateInput = document.getElementById("invoiceDate");
-    invoiceDateInput.value = new Date().toISOString().split("T")[0];
+    // Modal Handling
+    document.getElementById('openModalButton').addEventListener('click', () => {
+        document.getElementById('purchaseOrderModal').style.display = 'block';
+    });
+
+    document.getElementById('closeModalButton').addEventListener('click', () => {
+        document.getElementById('purchaseOrderModal').style.display = 'none';
+    });
+
+    fetchCustomerDetails();
 });
 
-document.getElementById("purchase-order-form").addEventListener("submit", function (e) {
-    e.preventDefault();
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('submit').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default form submission
 
-    const customerId = document.getElementById("customerDropdown").value;
-    const invoiceData = {
-        invoiceNumber: document.getElementById("invoiceNumber").value,
-        invoiceDate: document.getElementById("invoiceDate").value,
-        purchaseOrderNumber: document.getElementById("purchaseOrderNumber").value || null,
-        customerName: document.getElementById("customerName").value,
-        customerAddress: document.getElementById("customerAddress").value,
-        customerGstin: document.getElementById("customerGstin").value,
-        totalAmount: parseFloat(document.getElementById("totalAmount").value) || 0,
-        cgst: parseFloat(document.getElementById("cgst").value) || 0,
-        sgst: parseFloat(document.getElementById("sgst").value) || 0,
-        totalAmountAfterTax: parseFloat(document.getElementById("totalAmountAfterTax").value) || 0,
-        products: [...document.querySelectorAll("#productTableBody tr")].map(row => ({
-            productCode: row.querySelector("input[name='productCode[]']").value,
-            hsnCode: row.querySelector("input[name='hsnCode[]']").value,
-            uom: row.querySelector("input[name='uom[]']").value,
-            quantity: parseFloat(row.querySelector("input[name='quantity[]']").value) || 0,
-            rate: parseFloat(row.querySelector("input[name='rate[]']").value) || 0,
-            cgst: parseFloat(row.querySelector("input[name='cgst[]']").value) || 0,
-            sgst: parseFloat(row.querySelector("input[name='sgst[]']").value) || 0,
-        }))
-    };
+        console.log('Submit button clicked'); // Debugging check
 
-    fetch(`/api/purchase-order/${customerId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(invoiceData)
-    })
-    .then(response => {
-        if (response.ok) {
-            alert("Invoice saved successfully!");
-        } else {
-            alert("Failed to save invoice.");
+        const customerId = document.getElementById('customerDropdown').value;
+        if (!customerId) {
+            alert('Please select a customer.');
+            return;
         }
-    })
-    .catch(error => console.error("Error saving invoice:", error));
+
+        const purchaseOrderData = {
+            customerId: customerId,
+            invoiceNumber: document.getElementById('invoiceNumber')?.value || "",
+            invoiceDate: document.getElementById('invoiceDate')?.value || "",
+            purchaseOrderNumber: document.getElementById('purchaseOrderNumber')?.value || "",
+            totalAmount: parseFloat(document.getElementById('totalAmount')?.value) || 0,
+            vendorCode: document.getElementById('vendorCode')?.value || "",
+            amountInWords: document.getElementById('amountInWords')?.value || "",
+            products: []
+        };
+
+        document.querySelectorAll("#productTableBody tr").forEach(row => {
+            purchaseOrderData.products.push({
+                productCode: row.cells[0]?.querySelector('input')?.value || "",
+                description: row.cells[1]?.querySelector('input')?.value || "",
+                hsnCode: row.cells[2]?.querySelector('input')?.value || "",
+                uom: row.cells[3]?.querySelector('input')?.value || "",
+                quantity: parseFloat(row.cells[4]?.querySelector('input')?.value) || 0,
+                rate: parseFloat(row.cells[5]?.querySelector('input')?.value) || 0
+            });
+        });
+
+        //console.log("Sending Data:", JSON.stringify(purchaseOrderData, null, 2)); // Debugging
+
+        fetch(`/api/purchase-order/${customerId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(purchaseOrderData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            //console.log("Response Data:", data); // Debugging
+            alert("Purchase Order Saved Successfully!");
+            window.location.href = "/purchase-order.html";
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Failed to save Purchase Order");
+        });
+    });
 });
+
+
+
+
+function numberToWords(amount) {
+    const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+    const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+    const thousands = ["", "Thousand", "Million", "Billion"];
+
+    function convert(num) {
+        if (num === 0) return "Zero";
+
+        let words = "";
+        let index = 0;
+
+        while (num > 0) {
+            if (num % 1000 !== 0) {
+                words = convertHundreds(num % 1000) + thousands[index] + " " + words;
+            }
+            num = Math.floor(num / 1000);
+            index++;
+        }
+
+        return words.trim();
+    }
+
+    function convertHundreds(num) {
+        let result = "";
+        if (num > 99) {
+            result += ones[Math.floor(num / 100)] + " Hundred ";
+            num %= 100;
+        }
+        if (num > 19) {
+            result += tens[Math.floor(num / 10)] + " ";
+            num %= 10;
+        }
+        if (num > 0) {
+            result += ones[num] + " ";
+        }
+        return result;
+    }
+
+    return convert(amount);
+}
