@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Section</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Create Invoice</h1>
+    <form id="invoice-form">
+        <!-- Customer Selection -->
+        <div>
+            <label for="customerDropdown">Select Customer:</label>
+            <select id="customerDropdown" name="customer" required>
+                <option value="">Select a Customer</option>
+                <!-- Options will be dynamically populated -->
+            </select>
+        </div>
+
+        <!-- Customer Details -->
+        <div>
+            <label for="customerName">Customer Name:</label>
+            <input id="customerName" type="text" name="customerName" readonly />
+        </div>
+
+        <div>
+            <label for="customerAddress">Customer Address:</label>
+            <input id="customerAddress" type="text" name="customerAddress" readonly />
+        </div>
+
+        <div>
+            <label for="customerGstin">Customer GSTIN:</label>
+            <input id="customerGstin" type="text" name="customerGstin" readonly />
+        </div>
+
+        <div>
+            <label for="customerState">Customer State:</label>
+            <input id="customerState" type="text" name="customerState" readonly />
+        </div>
+
+        <!-- Invoice Details -->
+        <div>
+            <label for="invoiceNumber">Invoice Number:</label>
+            <input id="invoiceNumber" type="text" name="invoiceNumber" required />
+        </div>
+
+        <div>
+            <label for="invoiceDate">Invoice Date:</label>
+            <input id="invoiceDate" type="date" name="invoiceDate" required />
+        </div>
+
+        <div>
+            <label for="purchaseOrderNumber">Purchase Order Number:</label>
+            <input id="purchaseOrderNumber" type="text" name="purchaseOrderNumber" />
+        </div>
+
+        <!-- Product Table -->
+        <table id="productTable">
+            <thead>
+            <tr>
+                <th>Product Code</th>
+                <th>HSN Code</th>
+                <th>UOM</th>
+                <th>Quantity</th>
+                <th>Rate</th>
+                <th>Amount</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="productTableBody">
+            <!-- Product rows will be dynamically added here -->
+            </tbody>
+        </table>
+        <button type="button" id="addProductRowButton">Add Product Row</button>
+
+        <!-- Total and Tax Details -->
+        <div>
+            <label for="totalAmount">Total Amount:</label>
+            <input id="totalAmount" type="text" name="totalAmount" readonly />
+        </div>
+
+        <div>
+            <label for="cgst">CGST (9%):</label>
+            <input id="cgst" type="text" name="cgst" readonly />
+        </div>
+
+        <div>
+            <label for="sgst">SGST (9%):</label>
+            <input id="sgst" type="text" name="sgst" readonly />
+        </div>
+
+        <div>
+            <label for="totalAmountAfterTax">Total Amount After Tax:</label>
+            <input id="totalAmountAfterTax" type="text" name="totalAmountAfterTax" readonly />
+        </div>
+
+        <div>
+            <label for="amountInWords">Amount in Words:</label>
+            <input id="amountInWords" type="text" name="amountInWords" readonly />
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit">Submit Invoice</button>
+    </form>
+</div>
+
+<script>
+    // Autofill the current date for the invoice date field
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("invoiceDate").value = new Date().toISOString().split("T")[0];
+    });
+</script>
+
+<script src="invoice.js"></script>
+</body>
+</html>

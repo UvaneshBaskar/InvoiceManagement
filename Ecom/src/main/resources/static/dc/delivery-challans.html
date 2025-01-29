@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Challans</title>
+    <!-- Adjusted CSS path to point to the correct location -->
+    <link rel="stylesheet" href="/dc/style.css">
+</head>
+<body>
+<h1>Delivery Challans</h1>
+<table id="challans-table">
+    <thead>
+    <tr>
+        <th>Client ID</th>
+        <th>Client Challan Number</th>
+        <th>Challan Number</th>
+        <th>Date</th>
+        <th>Purchase Order Number</th>
+    </tr>
+    </thead>
+    <tbody id="challans-table-body">
+    <!-- Rows will be dynamically added here -->
+    </tbody>
+</table>
+<!-- Adjusted button link to point to the correct location -->
+<button onclick="window.location.href='/dc/new-dc/new-delivery-challan.html'">+ New Delivery Challan</button>
+<!-- Adjusted JavaScript file path to point to the correct location -->
+<script src="/dc/delivery-challans.js"></script>
+<p id="no-challans-message" style="display: none; text-align: center;">No challans available</p>
+</body>
+</html>
