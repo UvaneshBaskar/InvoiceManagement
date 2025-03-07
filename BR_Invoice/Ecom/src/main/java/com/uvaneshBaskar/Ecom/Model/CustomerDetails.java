@@ -1,7 +1,12 @@
 package com.uvaneshBaskar.Ecom.Model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,13 +15,18 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerDetails {
-    //client_id,company_name,display_name,email_id,contact number, vendor code, bank name,account no,ifsc code
+public class CustomerDetails 
+{
+//client_id,company_name,display_name,email_id,contact number, vendor code, bank name,account no,ifsc code
 // ,branch,state code
 //gstNo,Billing address, Shipping Address
+
+// Newly Added - clientType, bcountry , bstate , bcity , bpincode, scountry , sstate , scity , spincode
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Unique identifier for the invoice
+
+    private String clientType;
 
     @NotBlank(message = "Company name is required")
     private String companyName;
@@ -29,7 +39,6 @@ public class CustomerDetails {
     private String emailId;
 
     @NotBlank(message = "Contact number is required")
-    @Pattern(regexp = "\\d{10}", message = "Contact number must be 10 digits")
     private String contactNumber;
 
     @NotBlank(message = "Vendor code is required")
@@ -48,24 +57,41 @@ public class CustomerDetails {
     private String branchName;
 
     @NotBlank(message = "State code is required")
-    @Pattern(regexp = "\\d{2}", message = "State code must be 2 digits")
     private String stateCode;
 
     @NotBlank(message = "GST number is required")
-    @Pattern(regexp = "\\d{2}[A-Z]{5}\\d{4}[A-Z]{1}[A-Z\\d]{1}[Z]{1}[A-Z\\d]{1}",
-            message = "Invalid GST number format")
     private String gstNumber;
 
     @NotBlank(message = "Billing address is required")
     @Lob
     private String billingAddress;
 
-    @NotBlank(message = "Shipping address is required")
+    @NotBlank(message = "billCountry is required")
+    private String billCountry;
+
+    @NotBlank(message = "billState is required")
+    private String billState;
+
+    @NotBlank(message = "billCity is required")
+    private String billCity;
+
+    @NotBlank(message = "billPincode is required")
+    private String billPincode;
+
+    @NotBlank(message = "shipping address is required")
     @Lob
     private String shippingAddress;
 
-    @NotBlank(message = "Status is required")
-    private String status;
+    @NotBlank(message = "shipCountry is required")
+    private String shipCountry;
 
+    @NotBlank(message = "shipState is required")
+    private String shipState;
+
+    @NotBlank(message = "shipCity is required")
+    private String shipCity;
+
+    @NotBlank(message = "shipPincode is required")
+    private String shipPincode;
 }
 

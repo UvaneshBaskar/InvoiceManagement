@@ -1,11 +1,12 @@
 package com.uvaneshBaskar.Ecom.Service;
 
-import com.uvaneshBaskar.Ecom.Model.CustomerDetails;
-import com.uvaneshBaskar.Ecom.Repository.CustomerDetailsRepo;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.uvaneshBaskar.Ecom.Model.CustomerDetails;
+import com.uvaneshBaskar.Ecom.Repository.CustomerDetailsRepo;
 
 @Service
 public class CustomerDetailsService {
@@ -17,7 +18,10 @@ public class CustomerDetailsService {
 //        return repo.saveAll(invoices);
 //    }
 
-    public CustomerDetails saveCustomerDetails(CustomerDetails customerDetails) {
+    public CustomerDetails saveCustomerDetails(CustomerDetails customerDetails) 
+    {
+        // System.out.println("4. from CustomerDetailsService.java");
+        // System.out.println("444." + customerDetails);
         return repo.save(customerDetails);
     }
 
@@ -37,6 +41,7 @@ public class CustomerDetailsService {
         CustomerDetails existingCustomerDetails = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Customer Details not found with ID: " + id));
 
+        existingCustomerDetails.setClientType(updatedCustomerDetails.getClientType());
         existingCustomerDetails.setCompanyName(updatedCustomerDetails.getCompanyName());
         existingCustomerDetails.setEmailId(updatedCustomerDetails.getEmailId());
         existingCustomerDetails.setContactNumber(updatedCustomerDetails.getContactNumber());
@@ -49,7 +54,18 @@ public class CustomerDetailsService {
         existingCustomerDetails.setStateCode(updatedCustomerDetails.getStateCode());
         existingCustomerDetails.setGstNumber(updatedCustomerDetails.getGstNumber());
         existingCustomerDetails.setBillingAddress(updatedCustomerDetails.getBillingAddress());
+
+        existingCustomerDetails.setBillCountry(updatedCustomerDetails.getBillCountry());
+        existingCustomerDetails.setBillCity(updatedCustomerDetails.getBillCity());
+        existingCustomerDetails.setBillState(updatedCustomerDetails.getBillCity());
+        existingCustomerDetails.setBillPincode(updatedCustomerDetails.getBillPincode());
+
         existingCustomerDetails.setShippingAddress(updatedCustomerDetails.getShippingAddress());
+
+        existingCustomerDetails.setShipCountry(updatedCustomerDetails.getShipCountry());
+        existingCustomerDetails.setShipCity(updatedCustomerDetails.getShipCity());
+        existingCustomerDetails.setShipState(updatedCustomerDetails.getShipState());
+        existingCustomerDetails.setShipPincode(updatedCustomerDetails.getShipPincode());
 
 
         return repo.save(existingCustomerDetails);

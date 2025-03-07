@@ -1,15 +1,21 @@
 package com.uvaneshBaskar.Ecom.Controller;
 
-import com.uvaneshBaskar.Ecom.Model.DeliveryChallan;
-import com.uvaneshBaskar.Ecom.Repository.DeliveryChallanRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.uvaneshBaskar.Ecom.Model.DeliveryChallan;
+import com.uvaneshBaskar.Ecom.Repository.DeliveryChallanRepo;
 
 
 @RestController
@@ -35,15 +41,18 @@ public class DeliveryChallanController {
 
         List<DeliveryChallan> formattedChallans = challans.stream().map(challan -> {
             DeliveryChallan dto = new DeliveryChallan();
-            dto.setClientId(challan.getClientId());
-            dto.setDeliveryChallanNo(challan.getDeliveryChallanNo());
-            dto.setClientDeliveryChallanNo(challan.getClientDeliveryChallanNo());
-            dto.setDate(challan.getDate());
+
+            dto.setCustomerId(challan.getCustomerId());
+            dto.setCustDeliveryChallanNo(challan.getCustDeliveryChallanNo());
+            dto.setCustDeliveryChallanDate(challan.getCustDeliveryChallanDate());
+
+            dto.setOurDeliveryChallanNo(challan.getOurDeliveryChallanNo());
+            dto.setOurDeliveryChallanDate(challan.getOurDeliveryChallanDate());
+
+            dto.setPurchaseOrderDate(challan.getPurchaseOrderDate());
             dto.setPurchaseOrderNumber(challan.getPurchaseOrderNumber());
 
             // Split concatenated fields and join them back for better readability
-            String[] itemCodes = challan.getItemCode() != null ? challan.getItemCode().split("##") : new String[0];
-            dto.setItemCode(String.join(", ", itemCodes));
 
             String[] quantities = challan.getQuantity() != null ? challan.getQuantity().split("##") : new String[0];
             dto.setQuantity(String.join(", ", quantities));
@@ -70,14 +79,17 @@ public class DeliveryChallanController {
     @PostMapping
     public ResponseEntity<?> saveDeliveryChallan(@RequestBody DeliveryChallan challanDTO) {
         DeliveryChallan challan = new DeliveryChallan();
-        challan.setClientId(challanDTO.getClientId());
-        challan.setDeliveryChallanNo(challanDTO.getDeliveryChallanNo());
-        challan.setClientDeliveryChallanNo(challanDTO.getClientDeliveryChallanNo());
-        challan.setDate(challanDTO.getDate());
+        
+        challan.setCustomerId(challanDTO.getCustomerId());
+        challan.setCustDeliveryChallanNo(challanDTO.getCustDeliveryChallanNo());
+        challan.setCustDeliveryChallanDate(challanDTO.getCustDeliveryChallanDate());
+
+        challan.setOurDeliveryChallanNo(challanDTO.getOurDeliveryChallanNo());
+        challan.setOurDeliveryChallanDate(challanDTO.getOurDeliveryChallanDate());
+
+        challan.setPurchaseOrderDate(challanDTO.getPurchaseOrderDate());
         challan.setPurchaseOrderNumber(challanDTO.getPurchaseOrderNumber());
 
-        // Concatenate multiple entries into a single string
-        challan.setItemCode(String.join("##", challanDTO.getItemCode()));
         //challan.setQuantity(Collections.singletonList(challanDTO.getQuantity().stream().map(String::valueOf).collect(Collectors.joining("##"))));
         String quantityInput = challanDTO.getQuantity();
         String concatenatedQuantities = Arrays.stream(quantityInput.split(","))

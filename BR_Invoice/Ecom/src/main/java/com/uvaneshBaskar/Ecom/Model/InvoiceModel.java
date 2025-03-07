@@ -1,19 +1,27 @@
 package com.uvaneshBaskar.Ecom.Model;
 
-import jakarta.persistence.*;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "invoice")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InvoiceModel {
+public class InvoiceModel 
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,29 +30,17 @@ public class InvoiceModel {
     @JoinColumn(name = "customer_id", nullable = false)
     private CustomerDetails customer;
 
-    private String purchaseOrderNumber;
-
-
-    private String invoiceNumber;
-    private LocalDate invoiceDate;
-
-//    private String productCode; // Multiple entries, delimited by "##"
-//    private String hsnCode; // Multiple entries, delimited by "##"
-//    private String uom; // Unit of Measurement, delimited by "##"
-//    private String quantity; // Multiple entries, delimited by "##"
-//    private String rate; // Multiple entries, delimited by "##"
-//    private String amount; // Multiple entries, delimited by "##"
-
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductForInvoice> products; // Replacing delimited fields with a proper relationship
 
 
-    private double cgst;
-    private double sgst;
-    private double totalAmount;
-    private String amountInWords;
+    
+    private String purchaseOrderNumber;
+    private String purchaseOrderDate;
 
-    private  double totalAmountAfterTax;
+    private String invoiceNumber;
+    private String invoiceDate;
 
-    // Getters and setters
+    private double gstRate;
+
 }

@@ -1,31 +1,40 @@
 package com.uvaneshBaskar.Ecom.Model;
 
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeliveryChallan {
+public class DeliveryChallan 
+{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String clientId;
-    private String ClientDeliveryChallanNo;
-    private String deliveryChallanNo;
-    private LocalDate date;
+    
+    private String customerId;
+
+    
+    private String custDeliveryChallanNo;
+    private String custDeliveryChallanDate;
+
+
+    private String ourDeliveryChallanNo;
+    private String ourDeliveryChallanDate;
+
+
     private String purchaseOrderNumber;
+    private String purchaseOrderDate;
 
 //    @ElementCollection
 //    @CollectionTable(name = "delivery_challan_items", joinColumns = @JoinColumn(name = "delivery_challan_id"))
@@ -38,8 +47,6 @@ public class DeliveryChallan {
 //        private String description;
 //        private int quantity;
 //        private String remarks;}
-    @Column(length = 2000) // Adjust length as needed
-    private String itemCode;
 
     @Column(length = 2000)
     private String quantity;
