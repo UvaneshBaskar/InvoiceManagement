@@ -1,27 +1,36 @@
 package com.uvaneshBaskar.Ecom.Model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "purchaseOrderProduct")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductForPurchaseOrder {
+public class ProductForPurchaseOrder 
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String productCode;
     private String description;
+
     private String hsnCode;
-    private String uom; // Unit of Measurement
+    // private String uom; // Unit of Measurement
     private int quantity;
     private BigDecimal rate;
     private BigDecimal amount;
@@ -32,6 +41,6 @@ public class ProductForPurchaseOrder {
 
     @ManyToOne
     @JoinColumn(name = "purchase_order", nullable = false)
-    @JsonBackReference // Prevents infinite recursion
+    @JsonIgnore
     private PurchaseOrderModel purchaseOrder;
 }
