@@ -1,14 +1,23 @@
 package com.uvaneshBaskar.Ecom.Controller;
 
-import com.uvaneshBaskar.Ecom.Model.CustomerDetails;
-import com.uvaneshBaskar.Ecom.Repository.InvoiceRepo;
-import com.uvaneshBaskar.Ecom.Service.CustomerDetailsService;
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.uvaneshBaskar.Ecom.Model.CustomerDetails;
+import com.uvaneshBaskar.Ecom.Service.CustomerDetailsService;
 
 
 @RestController
@@ -19,37 +28,47 @@ public class CustomerDetailsController {
     @Autowired
     private CustomerDetailsService customerDetailsService;
 
-    //private final InvoiceRepo repo;
+//    private final InvoiceRepo repo;
 //
 //    public InvoiceController(InvoiceRepo repo) {
 //        this.repo = repo;
 //    }
 //    @PostMapping
-//    public ResponseEntity<List<InvoiceRepo>> saveInvoices(@RequestBody List<InvoiceRepo> invoices) {
-//        List<InvoiceRepo> savedInvoices = repo.saveAll(invoices);
+//    public ResponseEntity<List<Invoice>> saveInvoices(@RequestBody List<Invoice> invoices) {
+//        List<Invoice> savedInvoices = repo.saveAll(invoices);
 //        return ResponseEntity.status(HttpStatus.CREATED).body(savedInvoices);
 //    }
 
     @PostMapping
-    public ResponseEntity<?> createInvoice(@RequestBody CustomerDetails customerDetails) {
-        try {
+    public ResponseEntity<?> createInvoice(@RequestBody CustomerDetails customerDetails) 
+    {
+
+        // System.out.println("000. Output: " + customerDetails);
+        try 
+        {
+            // System.out.println("1. Trying Saving!");
             CustomerDetails savedCustomerDetails = customerDetailsService.saveCustomerDetails(customerDetails);
-            return ResponseEntity.ok(savedCustomerDetails);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            // System.out.println("2. Hopefully saved!");
+            // System.out.println(savedCustomerDetails);
+            return ResponseEntity.ok(savedCustomerDetails); 
+        } 
+        catch (Exception e) 
+        {
+            // System.out.println("3. Exception from Controller!!!");
+            // System.out.println("5. Output: " + customerDetails);
+            //return (ResponseEntity<CustomerDetails>) ResponseEntity.status(HttpStatus.BAD_REQUEST);
+            // e.printStackTrace();
+
+            // return ResponseEntity.ok(customerDetails);
+            // return ResponseEntity.badRequest();
+            // return ResponseEntity<CustomerDetails>
+
+            // Return a meaningful error response with BAD_REQUEST status
+            String errorMessage = "Failed to create invoice: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("error", errorMessage));
         }
+                
     }
-
-//    @PostMapping
-//    public ResponseEntity<CustomerDetails> createInvoice(@RequestBody CustomerDetails customerDetails) {
-//        try {
-//            CustomerDetails savedCustomerDetails = customerDetailsService.saveCustomerDetails(customerDetails);
-//            return ResponseEntity.ok(savedCustomerDetails);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Set the body explicitly (optional)
-//        }
-//    }
-
 
 
 
