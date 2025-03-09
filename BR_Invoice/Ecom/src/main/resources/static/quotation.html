@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Customer Details</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+        <!-- External stylesheet reference -->
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
+        <link rel="stylesheet" href="fa/css/font-awesome.min.css">
+
+        <!-- Google font CDN Integration -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+        <script src="//cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"></script>
+        <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    </head>
+
+    <body>
+        <!-- MAIN PAGE CONTENT STARTS HERE -->
+        <div class="row tab_container">
+
+            <!-- COLUMN 1 -->
+            <!-- TABS AND SECTIONS -->
+            <div class="col-2 tab_button">
+                <div class="self_brand_div mb-1" >
+                    <!-- <a class="navbar-brand" href="#"><img src="images/tybon.jpg" class="tybon" alt="tybon"></a> -->
+                    <!-- <h1>Dashboard</h1> -->
+                    <div class="user_badge">
+                        <div class="nav-item dropdown">
+                            <a href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="nav-link dropdown-toggle user-action"><img src="images/avatar.jpg" class="avatar" alt="Avatar"> Company Name <b class="caret"></b></a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
+                                <li><a class="dropdown-item" href="#"><i class="fa fa-user"></i> Profile</a></li>
+                                <!-- <li><hr class="dropdown-divider"></li> -->
+                                <li><a class="dropdown-item" href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="department_title mb-3">
+                    <span>FINANCE</span>
+                </div>
+
+                <button class="btn tabs" onclick="openHomePage()" id="home_dashboard_btn">Home<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="openCustomerDash()" id="customer_btn">Customers<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="openPoPage()" id="po_btn">PO<i class="fa fa-caret-right"></i></button>
+                <div class="mb-4"></div>
+                <button class="btn tabsactive" onclick="openQuotesPage()" id="quotes_btn">Quotations<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="openDCPage()" id="dc_btn">Delivery Challan<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="openInvoicePage()" id="invoice_btn">Invoice<i class="fa fa-caret-right"></i></button>
+                <div class="mb-4"></div>
+                <button class="btn tabs" onclick="location.href='#'" id="expense_btn">Expenses<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="location.href='#'" id="monrep_btn">Monthly Reports<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="location.href='#'" id="audrep_btn">Auditor Reports<i class="fa fa-caret-right"></i></button>
+                
+            </div>
+
+
+
+
+
+            <!-- COLUMN 2 -->
+            <!-- each section Content -->
+            <div class="col-10 tab_content">
+
+                <!-- NAVBAR WITH ACCOUNT SETTINGS -->
+                <div class="custom_navbar">
+                    <div class="user_badge">
+                        <div class="nav-item dropdown">
+                            <div class="tab_section_title text-center">
+                                <p>Quotation</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CUSTOMERS TAB CONTENT -->
+                <!-- style="border: 2px solid green;" -->
+                <div class="home_tab_content text-center" id="home">
+
+                    <span style="color: red;">COME BACK TO THIS AT THE LAST</span>
+
+                </div>
+
+            </div>
+        </div>
+
+<!--        <section class="">-->
+<!--            <iframe src="new-customer-details.html" width="100%" height="500"></iframe>-->
+<!--        </section>-->
+
+        <!-- Link to external JavaScript file -->
+        <!-- <script src="customer-details.js"></script> -->
+        <script src="common.js"></script>
+        <!-- JavaScript Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    </body>
+</html>
