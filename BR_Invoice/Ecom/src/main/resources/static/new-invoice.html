@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Invoice</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Bootstrap CSS -->
+        <link href="css/bootstrap-5.1.3-dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+        <!-- External stylesheet reference -->
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
+        <link rel="stylesheet" href="fa/css/font-awesome.min.css">
+
+        <!-- Google font CDN Integration -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+        <script src="//cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"></script>
+        <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    </head>
+
+    <body>
+        <!-- MAIN PAGE CONTENT STARTS HERE -->
+        <div class="row tab_container">
+
+            <div class="col-2 tab_button">
+                <div class="self_brand_div mb-1" >
+                    <!-- <a class="navbar-brand" href="#"><img src="images/tybon.jpg" class="tybon" alt="tybon"></a> -->
+                    <!-- <h1>Dashboard</h1> -->
+                    <div class="user_badge">
+                        <div class="nav-item dropdown">
+                            <a href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="nav-link dropdown-toggle user-action"><img src="images/avatar.jpg" class="avatar" alt="Avatar"> Company Name <b class="caret"></b></a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
+                                <li><a class="dropdown-item" href="#"><i class="fa fa-user"></i> Profile</a></li>
+                                <!-- <li><hr class="dropdown-divider"></li> -->
+                                <li><a class="dropdown-item" href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="department_title mb-3">
+                    <span>FINANCE</span>
+                </div>
+
+                <button class="btn tabs" onclick="openHomePage()" id="home_dashboard_btn">Home<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="openCustomerDash()" id="customer_btn">Customers<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="openPoPage()" id="po_btn">PO<i class="fa fa-caret-right"></i></button>
+                <div class="mb-4"></div>
+                <button class="btn tabs" onclick="openQuotesPage()" id="quotes_btn">Quotations<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="openDCPage()" id="dc_btn">Delivery Challan<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabsactive" onclick="openInvoicePage()" id="invoice_btn">Invoice<i class="fa fa-caret-right"></i></button>
+                <div class="mb-4"></div>
+                <button class="btn tabs" onclick="location.href='#'" id="expense_btn">Expenses<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="location.href='#'" id="monrep_btn">Monthly Reports<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="location.href='#'" id="audrep_btn">Auditor Reports<i class="fa fa-caret-right"></i></button>
+                
+            </div>
+
+            <!-- COLUMN 2 -->
+            <!-- each section Content -->
+            <div class="col-10 tab_content">
+
+                <!-- MODAL START -->
+                <div class="modal fade" id="invoice_number_edit_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel_invoice"><b>Invoice Number</b></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="inv_num_body">
+                                    <div class="row">
+                                        <p>Your invoice numbers are set on auto-generate mode to save your time. Are you sure about changing this setting?</p>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                         
+                                            <div class="form-check" style="margin-left:10px; margin-top:10px;">
+                                                <input class="form-check-input" onclick="inv_num_creation(this)" type="radio" name="inv_num_gen" id="manual_inv_num" value="manual_inv_num">
+                                                <label class="form-check-label" for="manual_inv_num">I will add them manually each time</label>
+                                            </div>
+                                            <div class="form-check" style="margin-left:10px; margin-top:10px;">
+                                                <input class="form-check-input" onclick="inv_num_creation(this)" type="radio" name="inv_num_gen" id="auto_inv_num" value="auto_inv_num"> 
+                                                <label class="form-check-label" for="auto_inv_num">Continue auto-generating invoice numbers</label>
+                                            </div>
+                                            <div id="inv_num_pattern" hidden>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12">
+                                                                
+                                                    </div>
+                                                    <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                                        <label class="form-check-label">Prefix</label>
+                                                        <input required type="text" maxlength="20" name="order_num" id="order_num"  class="form-control" placeholder="BRHTC/24-25/">		
+                                                    </div>
+                                                    <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                                        <label class="form-check-label">Next Number</label>
+                                                        <input required type="text" maxlength="20" name="order_num" id="order_num"  class="form-control" placeholder="0000">
+                                                    </div>
+                                                    <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12">
+                                                                
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- MODAL OVER OVER -->
+
+
+
+                <!-- NAVBAR WITH ACCOUNT SETTINGS -->
+                <div class="custom_navbar">
+                    <div class="user_badge">
+                        <div class="nav-item dropdown">
+                            <div class="tab_section_title text-center">
+                                <p>Creating New Invoice</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+                <form id="invoice-form">
+                    <!-- class="cust_info_1" -->
+
+                    <div class="row mb-5">
+
+                        <div class="col-lg-8 col-md-7 col-sm-12 col-xs-12 row" style="padding-bottom:20px;"> 
+
+                            <div class="row">
+                                <span style="color: red;">NOTE</span>
+                                <span style="color: red;">1. PO number also autofill from PO Table including the items also</span>
+                            </div>
+
+                            <div class="form-group form_title" style="text-align: center; margin-bottom: 20px;">
+                                <label><b>Invoice Details</b></label>	
+                            </div>
+    
+    
+                            <div class="col-lg-6 col-md-5 col-sm-12 col-xs-12" style="padding-bottom:20px;">	
+                                <div class=""> 
+                                    <!-- <label for="id">Id:</label> -->
+                                    <input type="text" id="custo_id" name="custo_id" hidden>
+    
+                                    <div class="form-group row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12  text-end">	
+                                            <label for="customerDropdown" class="col-form-label"><b>Select Customer<span style="color: red;">&nbsp;*</span></b></label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-4 col-sm-12 col-xs-12">	
+                                            <select class="form-select" id="customerDropdown" name="customer" required>
+                                                <option value="">Select a Customer</option>
+                                                <!-- Options will be dynamically populated -->
+                                            </select>
+                                        </div>                                 
+                                    </div>
+
+                                    <div class="form-group row text-end mb-5">
+                                        <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-form-label"><b>GSTIN<span style="color: red;">&nbsp;*</span></b></label>
+                                        <div class="col-lg-8 col-md-4 col-sm-12 col-xs-12">
+                                            <input readonly type="text" name="customerGstin" id="customerGstin" class="form-control" placeholder="">
+                                        </div>
+                                    </div>
+    
+                                    <!-- <hr style="width: 100%; margin-top: 2px; margin-bottom: 2px; border-top: 1px solid black;"> -->
+
+                                    <div id="show_cust_addr">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-4 col-sm-12 col-xs-12">
+                                                <p class="title_small">Billing Address</p>
+                                                <span id="cust_bill_address"></span>
+                                            </div>
+                                            <div class="col-lg-6 col-md-4 col-sm-12 col-xs-12">
+                                                <p class="title_small">Shipping Address</p>
+                                                <span id="cust_ship_address"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div id="new_field"></div>
+                                    <input type="hidden" value="1" id="total_fields">
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-1 col-md-7 col-sm-12 col-xs-12" style="padding-bottom:20px;"> 
+                            </div>
+    
+                            <div class="col-lg-5 col-md-7 col-sm-12 col-xs-12 mb-1" style="padding-bottom:20px;"> 
+     
+                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+    
+                                    <!-- <div class="form-group form_title" style="text-align: center; margin-bottom: 20px;">
+                                        <label><b>Bank & GST Details</b></label>	
+                                    </div> -->
+
+                                    <div class="form-group row text-end">
+                                        <label for="purchaseOrderNumber" class="col-lg-5 col-md-4 col-sm-12 col-xs-12 col-form-label"><b>Invoice Number<span style="color: red;">&nbsp;*</span></b></label>
+                                        <div class="col-lg-6 col-md-4 col-sm-12 col-xs-12">
+                                            <input required type="text" name="invoiceNumber"  id="invoiceNumber" class="form-control" placeholder="">
+                                        </div>
+                                        <div class="col-lg-1 col-md-4 col-sm-12 col-xs-12">
+                                            <button class="inv_num_setting btn shadow-none" title="Invoice Number Generation Settings"><i class="fa fa-cog"></i></button>
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row text-end mb-5">
+                                        <label for="purchaseOrderDate" class="col-lg-5 col-md-4 col-sm-12 col-xs-12 col-form-label"><b>Invoice Date<span style="color: red;">&nbsp;*</span></b></label>
+                                        <div class="col-lg-7 col-md-4 col-sm-12 col-xs-12">
+                                            <input required type="date" name="invoiceDate"  id="invoiceDate" class="form-control" placeholder="">
+                                        </div>
+                                    </div>  
+    
+                                    <div class="form-group row text-end">
+                                        <label for="purchaseOrderNumber" class="col-lg-5 col-md-4 col-sm-12 col-xs-12 col-form-label"><b>PO Number<span style="color: red;">&nbsp;*</span></b></label>
+                                        <div class="col-lg-7 col-md-4 col-sm-12 col-xs-12">
+                                            <input required type="text" name="purchaseOrderNumber"  id="purchaseOrderNumber" class="form-control" placeholder="">
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row text-end mb-5">
+                                        <label for="purchaseOrderDate" class="col-lg-5 col-md-4 col-sm-12 col-xs-12 col-form-label"><b>PO Date<span style="color: red;">&nbsp;*</span></b></label>
+                                        <div class="col-lg-7 col-md-4 col-sm-12 col-xs-12">
+                                            <input required type="date" name="purchaseOrderDate"  id="purchaseOrderDate" class="form-control" placeholder="">
+                                        </div>
+                                    </div>
+
+                                    <input readonly type="text" name="customerName" id="customerName" class="form-control" hidden>
+                                    <input readonly type="text" name="customerAddress" id="customerAddress" class="form-control" hidden>
+
+                                    <div class="form-group row text-end mt-5">
+                                        <label class="col-lg-5 col-md-4 col-sm-12 col-xs-12 col-form-label"><b>CGST / SGST Rate<span style="color: red;">&nbsp;*</span></b></label>
+                                        <div class="col-lg-7 col-md-4 col-sm-12 col-xs-12">
+                                            <select style="text-align: left; padding-left:5px; padding-right:5px; " class="form-select" name="gst_rate" id="gst_rate" required="true">
+                                                <option value="-1">GST Rate</option>
+                                                <option value="0">No tax</option>
+                                                <option value="2.5">5% [2.5% + 2.5%]</option>
+                                                <option value="6">12% [6% + 6%]</option>
+                                                <option value="9">18% [9% + 9%]</option>
+                                                <option value="14">28% [14% + 14%]</option>
+                                            </select>
+                                        </div>
+                                    </div>  
+
+                                    <div id="gst_rate_warning" class="text-center">
+                                        <p class="blink">WARNING! GST Rate not selected! &nbsp;&nbsp;<i class="fa fa-arrow-up red" aria-hidden="true"></i></p>
+                                    </div>
+    
+                                </div>
+                                    
+                            </div> 
+
+                        </div>
+
+                        <div class="col-lg-4 col-md-7 col-sm-12 col-xs-12 text-center" style="padding-bottom:20px;"> 
+
+                            <!-- <button class="btn tabsactive" onclick="openPoPage()" id="po_btn">PO<i class="fa fa-caret-right"></i></button> -->
+                            <button type="button" onclick="openInvoicePage()" class="btn shadow-none btn-warning">Go Back</button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-5">
+
+                        <div class="col-lg-10 col-md-7 col-sm-12 col-xs-12">
+
+                            <!-- Items TABLE -->    
+                            <table id="productTable" class="table table-hover">
+                                <thead>
+                                <tr style="height: 50px;">
+                                    <th style="vertical-align: middle; text-align: center; width: 15%;">Product Description</th>
+                                    <th style="vertical-align: middle; text-align: center; width: 8%;">HSN Code</th>
+                                    <th style="vertical-align: middle; text-align: center; width: 5%;">Quantity</th>
+                                    <th style="vertical-align: middle; text-align: center; width: 8%;">Rate</th>
+                                    <th style="vertical-align: middle; text-align: center; width: 8%;">Amount</th>
+                                    <th style="vertical-align: middle; text-align: center; width: 5%;">CGST</th>
+                                    <th style="vertical-align: middle; text-align: center; width: 5%;">SGST</th>
+                                    <th style="vertical-align: middle; text-align: center; width: 8%;">Total</th>
+                                    <th style="vertical-align: middle; text-align: center; width: 1%;"></th>
+                                </tr>
+                                </thead>
+                                <tbody id="productTableBody">
+                                    <tr style="height: 100px;">
+                                        <td>
+                                            <textarea name="productCode[]" rows="2" cols="50" placeholder="Type Item Description" required class="form-control"></textarea>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="hsnCode[]" placeholder="HSN Code" required class="form-control">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="quantity[]" placeholder="Quantity" required class="form-control">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="rate[]" placeholder="Price" required class="form-control">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="amount[]" placeholder="Item Total" class="form-control" disabled>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="cgst[]" placeholder="CGST" class="form-control" disabled>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="sgst[]" placeholder="SGST" class="form-control" disabled>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="tempamount[]" placeholder="Item Total" class="form-control" disabled>
+                                        </td>
+                                        <td>
+                                            <!-- <button type="button" onclick="removeProductRow(this)">Remove</button> -->
+                                            <button type="button" onclick="removeProductRow(this)" class="btn"><i class="fa fa-times"></i></button>
+                                        </td>
+                                    </tr>
+                                <!-- Product rows will be dynamically added here -->
+                                </tbody>
+                            </table>    
+    
+                            <div class="form-group" style="text-align: start; margin-top: 20px;">
+                                <button type="button" class="btn shadow-none btn-secondary" id="addProductRowButton">Add rows</button>
+                                <!-- onclick="Add_New_Customer();" -->
+                            </div>
+    
+                        </div>
+
+                        <div class="col-lg-2 col-md-7 col-sm-12 col-xs-12">
+                            
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-lg-8 col-md-7 col-sm-12 col-xs-12" style="padding-bottom:20px;"> 
+
+                            <div class="row">
+                                <div class="col-lg-6 col-md-5 col-sm-12 col-xs-12" style="padding-bottom:20px;">	
+
+                                    <div class="form-group row" style="margin-top: 20px;">
+                                        <label for="amountInWords" class="col-sm-4 col-form-label"><b>Amount in Words:</b></label>
+                                        <div class="col-sm-8">
+                                            <input id="amountInWords" type="text" name="amountInWords" readonly class="form-control" placeholder="">
+                                        </div>
+                                    </div>
+        
+                                </div>
+
+                                <div class="col-lg-1 col-md-7 col-sm-12 col-xs-12" style="padding-bottom:20px; border-right: 1px solid rgb(170,170, 170, 0.8);"> 
+
+                                </div>
+
+                                <div class="col-lg-5 col-md-7 col-sm-12 col-xs-12" style="padding-bottom:20px;"> 
+        
+                                    <div class="form-group row" style="margin-top: 20px;">
+                                        <label for="totalAmount" class="col-sm-4 col-form-label"><b>Total Amount before Tax</b></label>
+                                        <div class="col-sm-8">
+                                            <input id="totalAmount" type="text" name="totalAmount" readonly class="form-control" placeholder="">
+                                        </div>
+                                    </div>
+        
+                                    <div class="form-group row" style="margin-top: 20px;">
+                                        <label for="cgst" class="col-sm-4 col-form-label"><b>Total CGST</b></label>
+                                        <div class="col-sm-8">
+                                            <input id="cgst" type="text" name="cgst" readonly class="form-control" placeholder="">
+                                        </div>
+                                    </div>
+        
+                                    <div class="form-group row" style="margin-top: 20px;">
+                                        <label for="sgst" class="col-sm-4 col-form-label"><b>Total SGST</b></label>
+                                        <div class="col-sm-8">
+                                            <input id="sgst" type="text" name="sgst" readonly class="form-control" placeholder="">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row" style="margin-top: 20px;">
+                                        <label for="sgst" class="col-sm-4 col-form-label"><b>Total TAX</b></label>
+                                        <div class="col-sm-8">
+                                            <input id="taxTotal" type="text" name="taxTotal" readonly class="form-control" placeholder="">
+                                        </div>
+                                    </div>
+        
+                                    <div class="form-group row" style="margin-top: 20px;">
+                                        <label for="totalAmountAfterTax" class="col-sm-4 col-form-label"><b>Total Amount After Tax</b></label>
+                                        <div class="col-sm-8">
+                                            <input id="totalAmountAfterTax" type="text" name="totalAmountAfterTax" readonly class="form-control" placeholder="">
+                                        </div>
+                                    </div>
+                                        
+                                </div> 
+                            </div>
+
+                            <div class="form-group" style="text-align: center; margin-top: 20px;">
+                                <button type="submit" class="btn shadow-none btn-info" id="cust_submit">Save as Draft</button>
+                                <button type="submit" class="btn shadow-none btn-success" id="cust_submit">Create Invoice</button>
+                                <!-- onclick="Add_New_Customer();" -->
+                            </div>
+                        
+                        </div>
+
+                        <div class="col-lg-4 col-md-7 col-sm-12 col-xs-12" style="padding-bottom:20px;"> 
+                        
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+
+
+        </div>
+
+
+        <!-- Link to external JavaScript file -->
+        <script src="invoice.js"></script>
+        <script src="common.js"></script>
+        <!-- JavaScript Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    </body>
+</html>

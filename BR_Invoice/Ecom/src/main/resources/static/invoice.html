@@ -1,118 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Section</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div class="container">
-    <h1>Create Invoice</h1>
-    <form id="invoice-form">
-        <!-- Customer Selection -->
-        <div>
-            <label for="customerDropdown">Select Customer:</label>
-            <select id="customerDropdown" name="customer" required>
-                <option value="">Select a Customer</option>
-                <!-- Options will be dynamically populated -->
-            </select>
+
+    <head>
+        <title>Invoice Details</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+        <!-- External stylesheet reference -->
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
+        <link rel="stylesheet" href="fa/css/font-awesome.min.css">
+
+        <!-- Google font CDN Integration -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+        <script src="//cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"></script>
+        <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    </head>
+
+    <body>
+        <!-- MAIN PAGE CONTENT STARTS HERE -->
+        <div class="row tab_container">
+
+            <!-- COLUMN 1 -->
+            <!-- TABS AND SECTIONS -->
+            <div class="col-2 tab_button">
+                <div class="self_brand_div mb-1" >
+                    <!-- <a class="navbar-brand" href="#"><img src="images/tybon.jpg" class="tybon" alt="tybon"></a> -->
+                    <!-- <h1>Dashboard</h1> -->
+                    <div class="user_badge">
+                        <div class="nav-item dropdown">
+                            <a href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="nav-link dropdown-toggle user-action"><img src="images/avatar.jpg" class="avatar" alt="Avatar"> Company Name <b class="caret"></b></a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
+                                <li><a class="dropdown-item" href="#"><i class="fa fa-user"></i> Profile</a></li>
+                                <!-- <li><hr class="dropdown-divider"></li> -->
+                                <li><a class="dropdown-item" href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="department_title mb-3">
+                    <span>FINANCE</span>
+                </div>
+
+                <button class="btn tabs" onclick="openHomePage()" id="home_dashboard_btn">Home<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="openCustomerDash()" id="customer_btn">Customers<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="openPoPage()" id="po_btn">PO<i class="fa fa-caret-right"></i></button>
+                <div class="mb-4"></div>
+                <button class="btn tabs" onclick="openQuotesPage()" id="quotes_btn">Quotations<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="openDCPage()" id="dc_btn">Delivery Challan<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabsactive" onclick="openInvoicePage()" id="invoice_btn">Invoice<i class="fa fa-caret-right"></i></button>
+                <div class="mb-4"></div>
+                <button class="btn tabs" onclick="location.href='#'" id="expense_btn">Expenses<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="location.href='#'" id="monrep_btn">Monthly Reports<i class="fa fa-caret-right"></i></button>
+                <button class="btn tabs" onclick="location.href='#'" id="audrep_btn">Auditor Reports<i class="fa fa-caret-right"></i></button>
+                
+            </div>
+
+
+            
+            <!-- COLUMN 2 -->
+            <!-- each section Content -->
+            <div class="col-10 tab_content">
+
+                <!-- NAVBAR WITH ACCOUNT SETTINGS -->
+                <div class="custom_navbar">
+                    <div class="user_badge">
+                        <div class="nav-item dropdown">
+                            <div class="tab_section_title text-center">
+                                <p>Invoice Details</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CUSTOMERS TAB CONTENT -->
+                <!-- style="border: 2px solid green;" -->
+                <div class="customer_tab_content" id="customer">
+                    
+                    <div style="text-align: center;">
+                        <!-- <h3>Customers List</h3> -->
+                        <!-- <h5 style="color:red;">NOTE: </h5> -->
+
+                        <!-- Filter Feature -->
+                        <div class="row filter_bar">
+
+                            <div class="col-lg-7 col-md-3 col-sm-12 col-xs-12">
+                                <!-- Empty Filler -->
+                            </div>
+                            
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                <button id="new_customer" type="button" onclick="opennewInvoicePage()" style="float: right;" class="btn shadow-none btn-success"><i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;New</button>
+                            </div>
+                            <div class="col-lg-3 col-md-2 col-sm-12 col-xs-12">
+
+                                <div class="d-flex flex-row">
+                                    <input class="form-control" style="width: 100%;" type="text" id="textsearch"  onkeyup="po_name_search()" placeholder="Search in Invoice" title="Type in a Company Name">
+
+                                    <button type="button"  onclick="clear_filter_text()" id="clear_filters" class="btn shadow-none btn-danger clear_filters mx-3" ><i class="fa fa-times"></i></button>
+                                </div>
+
+                            </div>
+       
+                        </div>
+                        <!-- Filter Feature End-->
+
+                        <!--  BREAK LINE for creating Gap -->
+                        <br>
+
+                        <div class="mb-3 row">
+                            <span style="color: red;">NOTE: Onclick of Row, Show full details of the PO in the same form.</span>
+                            <span style="color: red;">NOTE: Search functionality wont work now, i will add later</span>
+                        </div>
+
+                        <!-- TABLE AND ROWS -->
+                        <div>   
+                            <table id="Po_Details_Table" class="table table-hover">
+                                <thead class="company_customer_thead_separate">
+                                    <tr class="text-start">
+                                        <th style="width: 1%;"></th>
+                                        <th style="width: 5%;">Inv. Date</th>
+                                        <th style="width: 5%;">Inv. #</th>
+                                        <th style="width: 5%;">PO #</th>
+                                        <th style="width: 10%;">Company Name</th>
+                                        <th style="width: 8%;">Status</th>
+                                        <!-- Status - Received, In-Process, Partially Closed, Completed, On Hold, Cancelled   -->
+                                        <th style="width: 8%;">Total Value</th> 
+                                    </tr>
+                                </thead>
+                                <tbody id="invoice_details_table_body">
+                                <!-- Dynamic rows will be inserted here -->
+                                 
+                                </tbody>
+
+                            </table>
+                            <span style="color: red;">POPULATE INVOICE DETAILS HERE</span>
+                        </div>
+                        
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
         </div>
 
-        <!-- Customer Details -->
-        <div>
-            <label for="customerName">Customer Name:</label>
-            <input id="customerName" type="text" name="customerName" readonly />
-        </div>
+<!--        <section class="">-->
+<!--            <iframe src="new-customer-details.html" width="100%" height="500"></iframe>-->
+<!--        </section>-->
 
-        <div>
-            <label for="customerAddress">Customer Address:</label>
-            <input id="customerAddress" type="text" name="customerAddress" readonly />
-        </div>
-
-        <div>
-            <label for="customerGstin">Customer GSTIN:</label>
-            <input id="customerGstin" type="text" name="customerGstin" readonly />
-        </div>
-
-        <div>
-            <label for="customerState">Customer State:</label>
-            <input id="customerState" type="text" name="customerState" readonly />
-        </div>
-
-        <!-- Invoice Details -->
-        <div>
-            <label for="invoiceNumber">Invoice Number:</label>
-            <input id="invoiceNumber" type="text" name="invoiceNumber" required />
-        </div>
-
-        <div>
-            <label for="invoiceDate">Invoice Date:</label>
-            <input id="invoiceDate" type="date" name="invoiceDate" required />
-        </div>
-
-        <div>
-            <label for="purchaseOrderNumber">Purchase Order Number:</label>
-            <input id="purchaseOrderNumber" type="text" name="purchaseOrderNumber" />
-        </div>
-
-        <!-- Product Table -->
-        <table id="productTable">
-            <thead>
-            <tr>
-                <th>Product Code</th>
-                <th>HSN Code</th>
-                <th>UOM</th>
-                <th>Quantity</th>
-                <th>Rate</th>
-                <th>Amount</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody id="productTableBody">
-            <!-- Product rows will be dynamically added here -->
-            </tbody>
-        </table>
-        <button type="button" id="addProductRowButton">Add Product Row</button>
-
-        <!-- Total and Tax Details -->
-        <div>
-            <label for="totalAmount">Total Amount:</label>
-            <input id="totalAmount" type="text" name="totalAmount" readonly />
-        </div>
-
-        <div>
-            <label for="cgst">CGST (9%):</label>
-            <input id="cgst" type="text" name="cgst" readonly />
-        </div>
-
-        <div>
-            <label for="sgst">SGST (9%):</label>
-            <input id="sgst" type="text" name="sgst" readonly />
-        </div>
-
-        <div>
-            <label for="totalAmountAfterTax">Total Amount After Tax:</label>
-            <input id="totalAmountAfterTax" type="text" name="totalAmountAfterTax" readonly />
-        </div>
-
-        <div>
-            <label for="amountInWords">Amount in Words:</label>
-            <input id="amountInWords" type="text" name="amountInWords" readonly />
-        </div>
-
-        <!-- Submit Button -->
-        <button type="submit">Submit Invoice</button>
-    </form>
-</div>
-
-<script>
-    // Autofill the current date for the invoice date field
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("invoiceDate").value = new Date().toISOString().split("T")[0];
-    });
-</script>
-
-<script src="invoice.js"></script>
-</body>
+        <!-- Link to external JavaScript file -->
+        <!-- <script src="customer-details.js"></script> -->
+        <script src="common.js"></script>
+        <!-- JavaScript Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    </body>
 </html>
