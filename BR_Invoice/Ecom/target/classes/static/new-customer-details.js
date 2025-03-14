@@ -69,46 +69,117 @@ document.getElementById('new-customer-details-form').addEventListener('submit', 
         shipPincode: document.getElementById('shipPincode').value
     };
 
-    try {
-        const url = customerId
-            ? `http://localhost:8080/api/customer-details/${customerId}`
-            : 'http://localhost:8080/api/customer-details';
-
-        const method = customerId ? "PUT" : "POST";
-
-        const response = await fetch(url, {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData),
+//    try {
+//        const url = customerId
+//            ? `http://localhost:8080/api/customer-details/${customerId}`
+//            : 'http://localhost:8080/api/customer-details';
+//
+//        const method = customerId ? "PUT" : "POST";
+//
+//        const response = await fetch(url, {
+//            method: method,
+//            headers: { 'Content-Type': 'application/json' },
+//            body: JSON.stringify(formData),
+//        });
+//
+//        if (response.ok) {
+//            alert(`Customer details ${customerId ? 'updated' : 'saved'} successfully!`);
+//            window.location.href = 'customer-details.html';
+//        } else {
+//            const errorData = await response.json();
+//            alert(`Error: ${errorData.message || 'Failed to save customer details.'}`);
+//        }
+//    }
+    try
+    {
+        // Send a POST request to the backend
+        const response = await fetch(
+        'http://localhost:8080/api/customer-details', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData), // Convert form data to JSON
         });
 
-        if (response.ok) {
-            alert(`Customer details ${customerId ? 'updated' : 'saved'} successfully!`);
-            window.location.href = 'customer-details.html';
-        } else {
-            const errorData = await response.json();
-            alert(`Error: ${errorData.message || 'Failed to save customer details.'}`);
+        // console.log(JSON.stringify(formData));
+
+        if (response.ok)
+        {
+            alert('Customer details saved successfully!');
+            window.location.href = 'customer-details.html'; // Redirect back to the main page
         }
-    } catch (error) {
+        else
+        {
+            const errorData = await response.json();
+            alert(`Error: ${errorData.message || 'Failed to save Customer details.'}`);
+        }
+    }
+
+     catch (error) {
         console.error('Error saving Customer details:', error);
         alert('Error saving Customer details. Please try again.');
     }
 });
 
 // Copy billing address to shipping address
-function copy_address(ele) {
-    const fields = ["Address", "Country", "State", "City", "Pincode"];
-    fields.forEach(field => {
-        const billingValue = document.getElementById(`bill${field}`).value;
-        document.getElementById(`ship${field}`).value = ele.checked ? billingValue : "";
-        document.getElementById(`ship${field}`).readOnly = ele.checked;
-    });
+function copy_address(ele)
+{
+    if(ele.checked)
+    {
+        // console.log("Checked!");
+        billingAddress = document.getElementById('billingAddress').value;
+        bCountry = document.getElementById('billCountry').value;
+        bState = document.getElementById('billState').value;
+        bCity = document.getElementById('billCity').value;
+        bPincode = document.getElementById('billPincode').value;
+
+        document.getElementById('shippingAddress').value = billingAddress;
+        document.getElementById('shipCountry').value = bCountry;
+        document.getElementById('shipState').value = bState;
+        document.getElementById('shipCity').value = bCity;
+        document.getElementById('shipPincode').value =bPincode;
+
+        document.getElementById('shippingAddress').readOnly = true;
+        document.getElementById('shipCountry').readOnly = true;
+        document.getElementById('shipState').readOnly = true;
+        document.getElementById('shipCity').readOnly = true;
+        document.getElementById('shipPincode').readOnly = true;
+
+    }
+    else if(!ele.checked)
+    {
+        // console.log("Not Checked!");
+        document.getElementById('shippingAddress').value = '';
+        document.getElementById('shipCountry').value = '';
+        document.getElementById('shipState').value = '';
+        document.getElementById('shipCity').value = '';
+        document.getElementById('shipPincode').value = '';
+
+        document.getElementById('shippingAddress').readOnly = false;
+        document.getElementById('shipCountry').readOnly = false;
+        document.getElementById('shipState').readOnly = false;
+        document.getElementById('shipCity').readOnly = false;
+        document.getElementById('shipPincode').readOnly = false;
+    }
 }
 
 // Validate account number confirmation
-function checkacnumber() {
-    const acc = document.getElementById('accountNumber').value;
-    const accheck = document.getElementById('accnocheck').value;
-    document.getElementById("accnocheck").style.borderColor = acc === accheck ? "#2EFE2E" : "red";
-    document.getElementById("cust_submit").disabled = acc !== accheck;
+function checkacnumber()
+{
+    var acc =  document.getElementById('accountNumber');
+    var accheck =  document.getElementById('accnocheck');
+    // console.log(acc.value, accheck.value);
+    if (acc.value == accheck.value)
+    {
+        accheck.style.borderColor = "#2EFE2E";
+        document.getElementById("cust_submit").disabled = false;
+
+    }
+    else
+    {
+        accheck.style.borderColor = "red";
+        document.getElementById("cust_submit").disabled = true;
+    }
+
 }
